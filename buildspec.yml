@@ -36,6 +36,10 @@ phases:
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --role-arn $EKS_KUBECTL_ROLE_ARN
       - kubectl apply -f simple_jwt_api.yml 
       - printf '[{"name":"simple_jwt_api","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
+      - CREDENTIALS=$(aws sts assume-role --role-arn $EKS_KUBECTL_ROLE_ARN --role-session-name codebuild-kubectl --duration-seconds 900)
+      - export AWS_ACCESS_KEY_ID="$(echo ${AKIA5NEHRYLOBGDTWFTO} | jq -r '.Credentials.AccessKeyId')"
+      - export AWS_SECRET_ACCESS_KEY="$(echo ${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} | jq -r '.Credentials.SecretAccessKey')"
+      - export AWS_SESSION_TOKEN="$(echo ${FwoGZXIvYXdzEMv//////////wEaDK6hIF/sL3wsbYz0DiK8ARn3NIdss5s4gBTd7sItVW3TsQuhi6I/5u8gDfx3ZEHLnTgFYgr+a5Ah8GuUQidOmMzIjB/9JJ8nnsisBs5VGxvEdm7jN/7MisqmuEJ+6EF001NaQUwLFVmEUOW33pblcZuUL+ekFGbC8JSQcU167ziv5bzbQvzahDWMVEvW9IGgGb4AX7gvbWg5eMgj6Wq5P2lxo2AwkcHUTKpYHc3xtof/9f3vHujAGZ0Lhw1irzgChcCizwO+BTY4n0oDKLD3vokGMi0YuQYioMOxgy8vn7fUDmUVe6dpNtqmHhPfPcyOusFuVv4DTovtFYcbAmG1CMA=} | jq -r '.Credentials.SessionToken')"
 artifacts:
   files: build.json
 
